@@ -1,4 +1,9 @@
-public class LinkList<T> {
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
+
+public class LinkList<T> implements Iterable<T>{
     private int elements;
     private Node<T> head;
 
@@ -110,5 +115,34 @@ public class LinkList<T> {
         }
         str += "]";
         return str;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private int currentIndex = 0;
+            @Override
+            public boolean hasNext() {
+                return currentIndex < size();
+            }
+
+            @Override
+            public T next() {
+                return get(currentIndex++);
+            }
+        };
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (T t : this) {
+            action.accept(t);
+        }
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        return Iterable.super.spliterator();
     }
 }

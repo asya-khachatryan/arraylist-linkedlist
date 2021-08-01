@@ -1,6 +1,10 @@
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Spliterator;
+import java.util.function.Consumer;
 
-public class ArrList<T> {
+public class ArrList<T> implements Iterable<T> {
     private T[] array;
     private int elements;
 
@@ -90,5 +94,35 @@ public class ArrList<T> {
     @Override
     public String toString() {
         return Arrays.toString(currentItems());
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new Iterator<T>() {
+            private int currentIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return currentIndex < elements;
+            }
+
+            @Override
+            public T next() {
+                return array[currentIndex++];
+            }
+        };
+    }
+
+    @Override
+    public void forEach(Consumer<? super T> action) {
+        Objects.requireNonNull(action);
+        for (T t : this) {
+            action.accept(t);
+        }
+    }
+
+    @Override
+    public Spliterator<T> spliterator() {
+        return Iterable.super.spliterator();
     }
 }
